@@ -1,0 +1,207 @@
+# File Manager App
+
+A full-stack file management application built with **FastAPI**, **Firebase Authentication**, **Google Cloud Storage**, and **React**. 
+Users can securely upload, list, download, and delete files. 
+Admin users have full access to all files.
+
+---
+
+## Features
+
+- **User Authentication:** Google sign-in with Firebase Authentication.  
+- **Role-based Access Control:** Admin vs. regular users.  
+- **File Management:**  
+  - Upload multiple files (`.json`, `.txt`, `.pdf`).  
+  - List files with sorting and filtering.  
+  - Download and delete files.  
+- **Cloud Storage:** Files stored in **Google Cloud Storage**.  
+- **Frontend:** React + Material-UI interface for file operations.  
+- **Frontend User Preferences (Bonus):**
+    - The app **remembers your file filters and sorting options** between sessions.  
+    - Preferences saved to **localStorage** include:  
+        - Search text (`search`)  
+        - File type filter (`fileType`)  
+        - Sort option (`sortBy`)  
+    - When you refresh the page, the filters are automatically restored.  
+    - This improves user experience by keeping your previous selections without needing to reapply them.
+
+
+---
+
+## Tech Stack
+
+- **Backend:** FastAPI, Python  
+- **Authentication:** Firebase Admin SDK  
+- **Storage:** Google Cloud Storage  
+- **Frontend:** React, Material-UI  
+- **Environment Management:** dotenv  
+
+---
+
+## Project Structure
+
+```bash
+app/
+├─ auth/
+│  └─ verify_token.py        # Firebase token verification
+├─ handlers/
+│  └─ files_handler.py       # Handlers for file operations
+├─ routes/
+│  └─ files.py               # API endpoints
+├─ services/
+│  └─ files_service.py       # Business logic for file operations
+├─ storage/
+│  ├─ bucket.py              # Firebase Storage bucket configuration
+│  └─ upload.py              # Upload utility
+main.py                       # FastAPI app entrypoint
+```
+
+Frontend: React app with components for file upload, filters, and file table.  
+
+---
+
+## Setup
+
+### 1. Clone the repository
+
+```bash
+git clone <repo-url>
+cd <repo-folder>
+```
+
+### 2. Backend Setup
+
+1. Create a Python virtual environment:
+
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
+```
+
+2. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Create a `.env` file with:
+
+```bash
+GOOGLE_APPLICATION_CREDENTIALS=serviceAccountKey.json
+GCP_STORAGE_BUCKET=file-upload-app-bucket
+FRONTEND_ORIGIN=http://localhost:5173
+SENTRY_DSN=https://ed5169a801a49021612f4e231027421a@o4510476198019072.ingest.us.sentry.io/4510476332171264
+```
+
+4. Add your Firebase service account JSON as `serviceAccountKey.json`.
+
+5. Run FastAPI backend:
+
+```bash
+uvicorn main:app --reload
+
+```
+
+### 3. Frontend Setup
+
+1. Navigate to the frontend folder:
+
+```bash
+cd frontend
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+3. Create a `.env` file with:
+
+```bash
+VITE_BACKEND_URL='http://127.0.0.1:8000'
+```
+
+4. Start the React app:
+
+```bash
+npm run dev
+```
+
+---
+
+## Monitoring / Error Tracking (Bonus)
+
+We use Sentry to track backend errors and monitor performance.
+
+Any unhandled exceptions in the backend will appear in your Sentry dashboard automatically.
+
+You can also track custom messages or performance traces.
+---
+
+## Assigning Admin Role
+
+To assign admin privileges to a Firebase user, update their custom claims:
+
+```bash
+import firebase_admin
+from firebase_admin import auth, credentials
+
+# Initialize Firebase
+cred = credentials.Certificate("serviceAccountKey.json")
+firebase_admin.initialize_app(cred)
+
+# Replace with the UID of the user
+uid = "USER_UID_HERE"
+auth.set_custom_user_claims(uid, {"role": "admin"})
+print(f"Admin role assigned to user {uid}")
+```
+
+- Admin users can access all files.
+- Regular users only see their own files.
+
+---
+
+## Usage
+
+1. Open the frontend in your browser (default: `http://localhost:5173`).  
+2. Log in using **Google Sign-In**.  
+3. Upload, list, download, or delete files based on your role.  
+4. Admin users can access all files, while regular users only see their own.  
+
+---
+
+## API Endpoints
+
+| Method | Endpoint                  | Description                     |
+|--------|---------------------------|---------------------------------|
+| POST   | `/upload`                 | Upload files                     |
+| GET    | `/files`                  | List files with filters/sorting |
+| GET    | `/download/{blob_name}`   | Download a file                  |
+| DELETE | `/delete/{blob_name}`     | Delete a file                    |
+
+All endpoints require **Firebase Bearer token** for authentication.
+
+---
+
+## Frontend Components
+
+- `Home`: Main page with login/logout, file upload, filters, and file table.  
+- `UploadInput`: Handles file selection and upload.  
+- `FileFilters`: Search, filter by type, and sort files.  
+- `FileTable`: Displays files with download/delete options.  
+- `useFiles`: Custom hook for fetching, uploading, and deleting files.  
+
+---
+
+## Environment Variables
+
+- `GOOGLE_APPLICATION_CREDENTIALS`: Path to Firebase service account key JSON  
+- `GCP_STORAGE_BUCKET`: Google Cloud Storage bucket name  
+- `FRONTEND_ORIGIN`: URL of frontend for CORS  
+
+---
+
+## License
+
+MIT License

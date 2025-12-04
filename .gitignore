@@ -1,0 +1,15 @@
+# Environment files
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Firebase credentials
+serviceAccountKey.json
+
+# Temp folders
+/tmp/

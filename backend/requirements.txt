@@ -1,0 +1,4 @@
+fastapi[all]
+firebase-admin
+python-multipart
+google-cloud-storage
