@@ -99,7 +99,7 @@ SENTRY_DSN=https://ed5169a801a49021612f4e231027421a@o4510476198019072.ingest.us.
 5. Run FastAPI backend:
 
 ```bash
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 
 ```
 
