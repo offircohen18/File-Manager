@@ -27,7 +27,6 @@ export default function UploadInput({ selectedFiles, setSelectedFiles, uploadMut
 
     uploadMutation.mutate(selectedFiles, {
       onError: (error) => {
-        // קבלת הודעת השגיאה מה־backend אם קיימת
         const message = error.response?.data?.detail || "Upload failed, please try again.";
         setLocalError(message);
       },
